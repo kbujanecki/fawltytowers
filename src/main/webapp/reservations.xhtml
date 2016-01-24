@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<head>
+<title>Reservations</title>
+</head>
+
+<body>
+	<p>
+		<h:messages style="color:red" />
+	</p>
+
+	<h3>Reservations list</h3>
+	<h:form rendered="#{not empty reservationController.reservations}">
+		<h:dataTable value="#{reservationController.reservations}" var="item">
+			<h:column>
+				<f:facet name="header">Room</f:facet>#{item.room}</h:column>
+			<h:column>
+				<f:facet name="header">Guest Name</f:facet>#{item.guest.name}</h:column>
+			<h:column>
+				<f:facet name="header">Check-in</f:facet>
+				<h:outputText value="#{item.from}">
+					<f:convertDateTime type="date" pattern="yyyy-MM-dd" />
+				</h:outputText>
+			</h:column>
+			<h:column>
+				<f:facet name="header">Check-out</f:facet>
+				<h:outputText value="#{item.to}">
+					<f:convertDateTime type="date" pattern="yyyy-MM-dd" />
+				</h:outputText>
+			</h:column>
+			<h:column>
+				<f:facet name="header">State</f:facet>#{item.cancel == false ? 'valid' : 'cancelled'}</h:column>
+			<h:column>
+				<h:commandButton rendered="#{!item.cancel}" value="cancel"
+					action="#{reservationController.cancel(item)}" />
+			</h:column>
+		</h:dataTable>
+	</h:form>
+
+	<h:panelGroup rendered="#{empty reservationController.reservations}">
+		<p>
+			No Reservations!<a href="#{mainController.freeRooms}"> Please add
+				reservations.</a>
+		</p>
+	</h:panelGroup>
+
+	<p>
+		<a href="#{mainController.baseUrl}">Back</a>
+	</p>
+</body>
+</html>

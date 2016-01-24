@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<head>
+<title>Available rooms</title>
+</head>
+
+<body>
+	<p>
+		<h:messages style="color:red" />
+	</p>
+	<h:form>
+		<h3>Search</h3>
+			Check-in date (yyyy-MM-dd):
+			<h:inputText label="Date From" value="#{freeRoomController.from}"
+			size="20" required="true">
+			<f:convertDateTime pattern="yyyy-MM-dd" />
+		</h:inputText>
+		
+			Check-out date (yyyy-MM-dd):
+			<h:inputText label="Date to" value="#{freeRoomController.to}"
+			size="20" required="true">
+			<f:convertDateTime pattern="yyyy-MM-dd" />
+		</h:inputText>
+
+		<h:commandButton value="search" action="#{freeRoomController.search}" />
+
+		<h3>Available rooms</h3>
+		<h:form rendered="#{not empty freeRoomController.rooms}">
+			<h:dataTable value="#{freeRoomController.rooms}" var="room">
+			<h:column>
+					<f:facet name="header">Nr.</f:facet>#{room.id}</h:column>
+				<h:column>
+					<f:facet name="header">Room Type</f:facet>#{room.getClass().getSimpleName()}</h:column>
+				<h:column>
+					<f:facet name="header">Windows</f:facet>#{room.windowView.name()}</h:column>
+				<h:column>
+					<h:commandButton value="fill reservation form"
+						action="#{freeRoomController.add(room)}" />
+				</h:column>
+			</h:dataTable>
+			<h:panelGroup rendered="#{freeRoomController.chosenOne != null}">
+				<p>
+					Create reservation for room "#{freeRoomController.chosenOne}" from:
+					<h:outputText value="#{freeRoomController.from}">
+						<f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+					</h:outputText>
+					to:
+					<h:outputText value="#{freeRoomController.to}">
+						<f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p>
+				<p>
+					Guest name:
+					<h:inputText value="#{freeRoomController.guest.name}" required="true" label="guest name" />
+				</p>
+				<p>
+					<h:commandButton value="create reservation"
+						action="#{freeRoomController.createReservation()}" />
+					<h:commandButton value="cancel"
+						action="#{freeRoomController.cancel()}" immediate="true"/>
+				</p>
+					
+
+			</h:panelGroup>
+
+
+		</h:form>
+
+	</h:form>
+	<p>
+		<a href="#{mainController.baseUrl}">Back</a>
+	</p>
+</body>
+</html>
